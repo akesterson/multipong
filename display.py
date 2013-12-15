@@ -97,7 +97,7 @@ class CursesDisplay(Display):
 
     def width(self, actorObj=None):
         if actorObj:
-            return actor.width(self)
+            return actorObj.width(self)
         return self.__screen__.getmaxyx()[1]
 
     def height(self, actorObj=None):
