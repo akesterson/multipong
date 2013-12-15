@@ -11,6 +11,8 @@ class Actor(event.EventHandler, registry.Registerable):
     def __init__(self, *args, **kwargs):
         registry.Registerable.__init__(self, *args, **kwargs)
         event.EventHandler.__init__(self, *args, **kwargs)
+        self.width = 0
+        self.height = 0
         self.x = 0
         self.y = 0
         self.vx = 0
@@ -38,10 +40,15 @@ class Actor(event.EventHandler, registry.Registerable):
 class Text(Actor):
     def __init__(self, *args, **kwargs):
         Actor.__init__(self, *args, **kwargs)
-        self.__text__ = kwargs.get('text', "")
+        self.setText(kwargs.get('text', ""))
 
     def setText(self, text):
         self.__text__ = text
+        widths = []
+        for line in self.__text__.split('\n'):
+            widths.append(len(line))
+        self.width = max(widths)
+        self.height = len(self.__text__.split("\n"))
 
     def frameForCursesDisplay(self):
         def drawForCurses(disp):

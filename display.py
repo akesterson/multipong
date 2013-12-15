@@ -25,6 +25,8 @@ class Display(event.EventHandler, registry.Registerable):
     def __init__(self, *args, **kwargs):
         registry.Registerable.__init__(self, *args, **kwargs)
         event.EventHandler.__init__(self, *args, **kwargs)
+        self.width = 0
+        self.height = 0
         self.__lock_actors__ = threading.RLock()
         self.__lock_timer__ = threading.RLock()
         self.__lock_drawing__ = threading.RLock()
@@ -73,6 +75,9 @@ class CursesDisplay(Display):
         self.logger.info("CursesDisplay starting")
         Display.__init__(self, *args, **kwargs)
         self.__screen__ = curses.initscr()
+        maxyx = self.__screen__.getmaxyx()
+        self.width = maxyx[1]
+        self.height = maxyx[0]
         self.__screen__.keypad(1)
         try:
             curses.curs_set(0)

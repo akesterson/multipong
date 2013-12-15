@@ -43,7 +43,7 @@ class Game(event.EventHandler, registry.Registerable):
 
         self.__players__.append(player.Player(registryKey='player1'))
         self.__players__.append(player.Player(registryKey='player2'))
-        self.__players__[1].x = 25
+        self.__players__[1].x = (self.__display__.width - self.__players__[1].width - 1)
         logger = logging.getLogger()
         logger.debug("Adding actors {} and {}".format(self.__players__[0].uuid, self.__players__[1].uuid))
         self.__display__.addActor(self.__players__[0])
