@@ -7,4 +7,4 @@ class Player(actor.Paddle, event.EventHandler):
         actor.Paddle.__init__(self, *args, **kwargs)
 
     def cleanup(self):
-        raise Exception("lol implement me")
+        pass
