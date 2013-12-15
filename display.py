@@ -25,8 +25,6 @@ class Display(event.EventHandler, registry.Registerable):
     def __init__(self, *args, **kwargs):
         registry.Registerable.__init__(self, *args, **kwargs)
         event.EventHandler.__init__(self, *args, **kwargs)
-        self.width = 0
-        self.height = 0
         self.__lock_actors__ = threading.RLock()
         self.__lock_timer__ = threading.RLock()
         self.__lock_drawing__ = threading.RLock()
@@ -41,6 +39,12 @@ class Display(event.EventHandler, registry.Registerable):
         self.__drawTimer__.cancel()
 
     # ---
+
+    def width(self, actorObj=None):
+        raise Exception("lol implement me")
+
+    def height(self, actorObj=None):
+        raise Exception("lol implement me")
 
     def checkInput(self):
         raise Exception("lol implement me")
@@ -75,9 +79,6 @@ class CursesDisplay(Display):
         self.logger.info("CursesDisplay starting")
         Display.__init__(self, *args, **kwargs)
         self.__screen__ = curses.initscr()
-        maxyx = self.__screen__.getmaxyx()
-        self.width = maxyx[1]
-        self.height = maxyx[0]
         self.__screen__.keypad(1)
         try:
             curses.curs_set(0)
@@ -93,6 +94,16 @@ class CursesDisplay(Display):
         curses.echo()
         curses.endwin()
         Display.cleanup(self)
+
+    def width(self, actorObj=None):
+        if actorObj:
+            return actor.width(self)
+        return self.__screen__.getmaxyx()[1]
+
+    def height(self, actorObj=None):
+        if actorObj:
+            return actorObj.height(self)
+        return self.__screen__.getmaxyx()[1]
 
     def refresh(self):
         Display.refresh(self)

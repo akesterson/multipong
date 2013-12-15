@@ -11,8 +11,6 @@ class Actor(event.EventHandler, registry.Registerable):
     def __init__(self, *args, **kwargs):
         registry.Registerable.__init__(self, *args, **kwargs)
         event.EventHandler.__init__(self, *args, **kwargs)
-        self.width = 0
-        self.height = 0
         self.x = 0
         self.y = 0
         self.vx = 0
@@ -37,6 +35,18 @@ class Actor(event.EventHandler, registry.Registerable):
             "frameFor{}".format(display.__class__.__name__)
             )()
 
+    def width(self, display):
+        return getattr(
+            self,
+            "widthFor{}".format(display.__class__.__name__)
+            )()
+
+    def height(self, display):
+        return getattr(
+            self,
+            "heightFor{}".format(display.__class__.__name__)
+            )()
+
 class Text(Actor):
     def __init__(self, *args, **kwargs):
         Actor.__init__(self, *args, **kwargs)
@@ -44,16 +54,20 @@ class Text(Actor):
 
     def setText(self, text):
         self.__text__ = text
-        widths = []
-        for line in self.__text__.split('\n'):
-            widths.append(len(line))
-        self.width = max(widths)
-        self.height = len(self.__text__.split("\n"))
 
     def frameForCursesDisplay(self):
         def drawForCurses(disp):
             disp.__screen__.addstr(self.y, self.x, self.__text__)
         return drawForCurses
+
+    def widthForCursesDisplay(self):
+        widths = []
+        for line in self.__text__.split('\n'):
+            widths.append(len(line))
+        return max(widths)
+
+    def heightForCursesDisplay(self):
+        self.height = len(self.__text__.split("\n"))
 
 class Paddle(Text):
     def __init__(self, *args, **kwargs):
